@@ -1,4 +1,11 @@
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { connection } from "next/server";
+import { LogoutButton } from "@/components/logout-button";
+import { getCurrentUser } from "@/lib/auth";
 import { AlertTriangle, ArrowRight, CalendarClock, CheckCircle2, CircleDashed, FolderKanban, ListTodo } from "lucide-react";
+
+export const instant = false;
 
 const tasks = [
   { title: "ML model checkpoint", status: "In Progress", priority: "High" },
@@ -13,10 +20,25 @@ const projects = [
 
 export default function MemberDashboardPage() {
   return (
+    <Suspense fallback={<main className="mx-auto max-w-7xl px-4 py-20 text-slate-300">Loading dashboard…</main>}>
+      <MemberDashboardContent />
+    </Suspense>
+  );
+}
+
+async function MemberDashboardContent() {
+  await connection();
+  const user = await getCurrentUser();
+  if (!user || user.role !== "member") redirect("/login?next=%2Fmember%2Fdashboard");
+
+  return (
     <main className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
       <section className="mb-10">
         <div className="text-sm font-semibold uppercase tracking-[0.2em] text-[#ffb347]">Member dashboard</div>
-        <h1 className="mt-3 text-4xl font-black tracking-[-0.05em] text-white sm:text-5xl">Welcome back, member.</h1>
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-4">
+          <h1 className="text-4xl font-black tracking-[-0.05em] text-white sm:text-5xl">Welcome back, {user.fullName}.</h1>
+          <LogoutButton />
+        </div>
       </section>
 
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">

@@ -1,58 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-
-const events = [
-  {
-    title: "AURA Orientation Program",
-    date: "28 August 2025",
-    location: "Edusat Lab, second floor, opposite Room 26",
-    summary: "Introduced freshers to AURA’s mission, research domains, collaboration opportunities, and the culture of technical learning.",
-  },
-  {
-    title: "DSA War Room",
-    date: "12 September 2025",
-    location: "GTBIT",
-    summary: "A competitive coding challenge focused on Data Structures and Algorithms, analytical thinking, coding efficiency, and problem-solving under pressure.",
-  },
-  {
-    title: "AURATHON 2025 — An Innovative Ideathon",
-    date: "National-level event",
-    location: "Department of Computer Science and Engineering, GTBIT",
-    summary: "AURATHON 2025 saw 120+ colleges across 22 states, with 278 teams and approximately 779 participants registering and 20 teams shortlisted for the final round.",
-  },
-  {
-    title: "Internal GitHub Session",
-    date: "Session-based workshop",
-    location: "AURA internal circle",
-    summary: "Members focused on repository workflows, commits, branching strategies, version control, and collaborative development practices.",
-  },
-  {
-    title: "Internal DSA Guidance Session",
-    date: "Session-based guidance",
-    location: "AURA internal circle",
-    summary: "A structured practice-oriented session on consistency, logical thinking, coding efficiency, and structured problem solving.",
-  },
-  {
-    title: "30-Day Generative AI Workshop",
-    date: "Workshop series",
-    location: "AURA technology hub",
-    summary: "Members explored LLMs, RAG pipelines, chatbot development, and practical applications of generative AI.",
-  },
-  {
-    title: "Brainstorming and Guidance Session",
-    date: "Ongoing academic support",
-    location: "AURA internal mentoring",
-    summary: "Personal, academic, and professional development conversations focused on growth, planning, and motivation.",
-  },
-  {
-    title: "Generative AI Speaker Session",
-    date: "2 March 2026",
-    location: "GTBIT",
-    summary: "An expert session featuring Dr. Sarabjot Singh on the changing market and corporate trends driven by AI and the power of Generative AI.",
-  },
-];
+import { useCmsContent } from "@/components/use-cms-content";
 
 export default function EventsPage() {
+  const { content } = useCmsContent();
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
       <section className="mb-16 text-center">
@@ -63,8 +17,8 @@ export default function EventsPage() {
       </section>
 
       <section className="space-y-6">
-        {events.map((event) => (
-          <div key={event.title} className="rounded-[30px] border border-white/10 bg-white/5 p-6 lg:p-8">
+        {content.events.map((event) => (
+          <div key={event.id} className="rounded-[30px] border border-white/10 bg-white/5 p-6 lg:p-8">
             <div className="grid gap-6 lg:grid-cols-[0.7fr_1.3fr]">
               <div className="rounded-[24px] border border-white/10 bg-[linear-gradient(135deg,rgba(255,179,71,0.12),rgba(46,197,196,0.12),rgba(7,18,30,0.9))] p-5">
                 <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ffb347]">Event</div>
@@ -79,6 +33,7 @@ export default function EventsPage() {
             </div>
           </div>
         ))}
+        {content.events.length === 0 ? <p className="rounded-2xl border border-dashed border-white/10 p-8 text-center text-slate-300">New events will appear here.</p> : null}
       </section>
 
       <div className="mt-16 flex justify-center">

@@ -1,44 +1,15 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-
-const departments = [
-  {
-    name: "Artificial Intelligence & Machine Learning",
-    description: "Explore generative AI, machine learning, computer vision and applied research.",
-    tone: "ember",
-  },
-  {
-    name: "Cybersecurity",
-    description: "Learn to build safer systems through security research and responsible practice.",
-    tone: "tide",
-  },
-  {
-    name: "Data Science",
-    description: "Turn real-world data into meaningful insight, models and useful products.",
-    tone: "ember",
-  },
-  {
-    name: "Research & Innovation",
-    description: "Take ideas from early questions to experiments, prototypes and projects.",
-    tone: "tide",
-  },
-];
-
-const events = [
-  { title: "AURA Orientation", detail: "Meet the society and find your place in the community." },
-  { title: "DSA War Room", detail: "Build confidence through focused, competitive problem solving." },
-  { title: "Generative AI Workshop", detail: "Explore LLMs, RAG pipelines and practical AI applications." },
-];
-
-const aurathonStats = [
-  { value: "120+", label: "colleges" },
-  { value: "22", label: "states" },
-  { value: "278", label: "teams" },
-  { value: "20", label: "finalists" },
-];
+import { useCmsContent } from "@/components/use-cms-content";
 
 export default function HomePage() {
+  const { content } = useCmsContent();
+  const aurathonEdition = [...content.aurathonEditions].sort((left, right) => Number(right.year) - Number(left.year))[0];
+  const aurathonStats = aurathonEdition?.stats.split("\n").map((line) => line.trim()).filter(Boolean) ?? [];
+
   return (
     <>
       <section className="relative flex min-h-[92svh] items-center overflow-hidden px-6 pb-16 pt-28">
@@ -109,7 +80,7 @@ export default function HomePage() {
           </div>
           <div>
             <p className="text-2xl leading-snug text-foreground sm:text-3xl">
-              AURA gives students the space to explore, develop and apply technical knowledge through research, collaboration and hands-on learning.
+              {content.about.objective}
             </p>
             <Link
               href="/about"
@@ -138,9 +109,9 @@ export default function HomePage() {
           </div>
 
           <div className="divide-y divide-border border-y border-border">
-            {departments.map((department, index) => (
+            {content.departments.slice(0, 4).map((department, index) => (
               <Link
-                key={department.name}
+                key={department.id}
                 href="/departments"
                 className="group grid grid-cols-[auto_1fr_auto] items-center gap-4 py-7 sm:gap-6 sm:py-8"
               >
@@ -157,7 +128,7 @@ export default function HomePage() {
                 </div>
                 <span
                   className={`grid h-10 w-10 shrink-0 place-items-center rounded-full text-background transition-transform group-hover:-rotate-45 sm:h-12 sm:w-12 ${
-                    department.tone === "ember" ? "bg-ember" : "bg-tide-grad"
+                    index % 2 === 0 ? "bg-ember" : "bg-tide-grad"
                   }`}
                 >
                   <ArrowRight size={19} />
@@ -178,7 +149,7 @@ export default function HomePage() {
                 AURA<span className="text-aura">THON</span>
               </h2>
               <p className="mt-6 max-w-xl leading-7 text-muted-foreground">
-                AURATHON brings students together to shape bold ideas into thoughtful solutions for real-world challenges.
+                {aurathonEdition?.description ?? "AURATHON brings students together to shape bold ideas into thoughtful solutions for real-world challenges."}
               </p>
               <Link
                 href="/aurathon"
@@ -188,14 +159,17 @@ export default function HomePage() {
               </Link>
             </div>
             <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-border">
-              {aurathonStats.map((stat) => (
-                <div key={stat.label} className="bg-surface p-5 sm:p-6">
-                  <p className="font-display text-3xl font-medium sm:text-4xl">{stat.value}</p>
+              {aurathonStats.slice(0, 4).map((stat) => {
+                const [value, label] = stat.split("|").map((part) => part.trim());
+                return (
+                <div key={`${value}-${label}`} className="bg-surface p-5 sm:p-6">
+                  <p className="font-display text-3xl font-medium sm:text-4xl">{value}</p>
                   <p className="mt-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
-                    {stat.label} · 2025
+                    {label} · {aurathonEdition?.year}
                   </p>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
@@ -216,9 +190,9 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
-            {events.map((event, index) => (
+            {content.events.slice(0, 3).map((event, index) => (
               <Link
-                key={event.title}
+                key={event.id}
                 href="/events"
                 className="group rounded-2xl border border-border bg-white/[0.02] p-6 transition-colors hover:bg-white/[0.05] sm:p-7"
               >
@@ -226,7 +200,7 @@ export default function HomePage() {
                 <h3 className="mt-8 text-xl font-medium transition-colors group-hover:text-gold sm:text-2xl">
                   {event.title}
                 </h3>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">{event.detail}</p>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">{event.summary}</p>
                 <span className="mt-7 inline-flex items-center gap-2 text-sm font-semibold">
                   Discover <ArrowRight size={16} />
                 </span>

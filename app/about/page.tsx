@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, BookOpen, Lightbulb, Rocket, Users, Workflow } from "lucide-react";
+import { useCmsContent } from "@/components/use-cms-content";
 
 const pillars = [
   { title: "Research and curiosity", description: "We help students question assumptions, investigate ideas, and explore emerging technologies with depth.", icon: Lightbulb },
@@ -8,25 +11,19 @@ const pillars = [
   { title: "Innovation and growth", description: "We connect academic learning with industry-relevant thinking, practical execution, and professional growth.", icon: Rocket },
 ];
 
-const timeline = [
-  { year: "2025", title: "AURA orientation", detail: "Freshers are introduced to AURA’s mission, research culture, and collaborative opportunities." },
-  { year: "2025", title: "DSA War Room", detail: "Students sharpen problem-solving and coding efficiency in a competitive learning environment." },
-  { year: "2025", title: "AURATHON 2025", detail: "A national ideathon bringing students from 120+ colleges and 22 states across India." },
-  { year: "2026", title: "AI speaker session", detail: "Generative AI trends and industry shifts were discussed through a focused technical talk." },
-];
-
 export default function AboutPage() {
+  const { content } = useCmsContent();
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
       <section className="mb-16 grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
         <div>
           <div className="text-sm font-semibold uppercase tracking-[0.2em] text-[#ffb347]">About AURA</div>
           <h1 className="mt-4 text-5xl font-black tracking-[-0.05em] text-white sm:text-6xl">
-            Building the next generation of builders.
+            {content.about.headline}
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-200">
-            AURA — Association for Unleashing Research and Advancement — is committed to empowering students with a
-            platform to explore, develop, and apply technical knowledge beyond the classroom.
+            {content.about.description}
           </p>
         </div>
 
@@ -36,9 +33,7 @@ export default function AboutPage() {
             <span className="text-sm font-semibold uppercase tracking-[0.2em]">Objective</span>
           </div>
           <p className="mt-5 text-base leading-8 text-slate-100">
-            The objective of AURA is to provide students with a platform to explore, develop, and apply their technical
-            knowledge beyond the classroom. The society promotes innovation, research, problem-solving, and collaboration
-            through workshops, competitions, projects, and knowledge-sharing sessions.
+            {content.about.objective}
           </p>
         </div>
       </section>
@@ -76,14 +71,13 @@ export default function AboutPage() {
           <div className="rounded-[24px] border border-white/10 bg-white/5 p-6">
             <h3 className="text-xl font-bold text-white">Vision</h3>
             <p className="mt-4 text-slate-200">
-              To create a student-first ecosystem where research, innovation, and collaborative learning become a habit,
-              not a one-off opportunity.
+              {content.about.vision}
             </p>
           </div>
           <div className="rounded-[24px] border border-white/10 bg-white/5 p-6">
             <h3 className="text-xl font-bold text-white">Values</h3>
             <p className="mt-4 text-slate-200">
-              Curiosity, creativity, leadership, accountability, inclusivity, and the courage to turn ideas into action.
+              {content.about.values}
             </p>
           </div>
         </div>
@@ -98,15 +92,16 @@ export default function AboutPage() {
         </div>
 
         <div className="space-y-4">
-          {timeline.map((item) => (
-            <div key={item.title} className="grid gap-4 rounded-[26px] border border-white/10 bg-white/5 p-5 md:grid-cols-[120px_1fr] md:items-start">
-              <div className="text-2xl font-black text-[#ffb347]">{item.year}</div>
+          {content.events.map((item) => (
+            <div key={item.id} className="grid gap-4 rounded-[26px] border border-white/10 bg-white/5 p-5 md:grid-cols-[180px_1fr] md:items-start">
+              <div className="text-lg font-black text-[#ffb347]">{item.date}</div>
               <div>
                 <div className="text-xl font-bold text-white">{item.title}</div>
-                <p className="mt-2 text-slate-300">{item.detail}</p>
+                <p className="mt-2 text-slate-300">{item.summary}</p>
               </div>
             </div>
           ))}
+          {content.events.length === 0 ? <p className="rounded-2xl border border-dashed border-white/10 p-8 text-center text-slate-300">AURA’s moments will appear here.</p> : null}
         </div>
       </section>
 
